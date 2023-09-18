@@ -1,0 +1,41 @@
+# This manifest contains fastapi app that deploys an FastAPI app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-python
+  namespace: standard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-python
+  template:
+    metadata:
+      labels:
+        app: fastapi-python
+    spec:
+      containers:
+      - name: fastapi-app
+        image: kubernetes-devops-project_fastapi:latest
+        imagePullPolicy: "IfNotPresent"
+        ports: 
+        - containerPort: 5000
+          name: fastapi-svc
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: fastapi-service
+  labels:
+    app: fastapi-python
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: fastapi-svc
+      nodePort: 31000
+
+
+
+        

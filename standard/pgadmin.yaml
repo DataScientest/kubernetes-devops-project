@@ -1,0 +1,53 @@
+# This is pgadmin witch allows to interact with postgres
+# pgAdmin 4 is a web based administration tool for the PostgreSQL database. 
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: pgadmin
+  namespace: standard
+  labels: 
+    app: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels: #label of pod
+        app: pgadmin
+    # The Pod template's specification, or .template.spec field, 
+    # indicates that the Pods run one container,
+    spec:
+      containers:
+      - name:  pgadmin
+        image: dpage/pgadmin4:latest
+        ports:
+        - containerPort: 80
+      #env variables required to use pgadmin
+        env:
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgre-root-password
+        - name: PGADMIN_DEFAULT_EMAIL
+          valueFrom:
+              configMapKeyRef:
+                name: postgres-configmap
+                key: pgadmin_default_email
+---
+# pgadmin external service
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin-service
+spec:
+  selector:
+    app: pgadmin
+  type: LoadBalancer  #type of service assigns service an external IP address and so accepts external requests
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080

@@ -1,0 +1,58 @@
+#The deployment file contains configuration of the PostgreSQL deployment
+#provides specifications for the containers and volumes:
+apiVersion: apps/v1
+kind: Deployment #why not use statefulset
+metadata:
+  name: postgres
+  namespace: standard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:12.16-alpine3.18
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 5432
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret #name from postgre-secret file
+                key: postgres-root-username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret #name from postgre-secret file
+                key: postgres-root-password
+            # Volume mount specifications in postgre container
+            # The volumeMounts section defines how the persistent storage from the PVC is mounted inside
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-persistent-volume
+      volumes:
+      - name: postgres-persistent-volume
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+   - port: 5432
+  selector:
+   app: postgres
+   tier: backend
+  
