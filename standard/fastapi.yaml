@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastapi-python
+  name: fastapi
   namespace: standard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fastapi-python
+      app: fastapi
   template:
     metadata:
       labels:
-        app: fastapi-python
+        app: fastapi
     spec:
       containers:
       - name: fastapi-app
-        image: kubernetes-devops-project_fastapi:latest
-        imagePullPolicy: "IfNotPresent"
+        image: tandiand/kubernetes-fastapi
+        imagePullPolicy: "Always"
         ports: 
         - containerPort: 5000
           name: fastapi-svc
@@ -27,7 +27,7 @@ kind: Service
 metadata: 
   name: fastapi-service
   labels:
-    app: fastapi-python
+    app: fastapi
 spec:
   type: NodePort
   ports:

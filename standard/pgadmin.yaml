@@ -30,7 +30,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: postgres-secret
-              key: postgre-root-password
+              key: postgres-root-password
         - name: PGADMIN_DEFAULT_EMAIL
           valueFrom:
               configMapKeyRef:
@@ -45,9 +45,9 @@ metadata:
 spec:
   selector:
     app: pgadmin
-  type: LoadBalancer  #type of service assigns service an external IP address and so accepts external requests
+  type: ClusterIP  #type of service assigns service an external IP address and so accepts external requests
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
-      nodePort: 30080
+  #     targetPort: 80
+  #     nodePort: 30080

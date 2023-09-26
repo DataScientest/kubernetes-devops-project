@@ -50,9 +50,12 @@ metadata:
     app: postgres
 spec:
   type: ClusterIP
-  ports:
-   - port: 5432
   selector:
-   app: postgres
-   tier: backend
+    app: postgres
+    tier: backend
+  ports:
+  - port: 5432 #allow to expose service port
+    protocol: TCP
+    targetPort: 5432 #container port
+
   
