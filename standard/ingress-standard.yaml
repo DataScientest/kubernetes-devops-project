@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastapi-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx #set ingress controller to use
+  rules:
+    - host: microservicesite.cours-devops.cloudns.ph # An optional host ingress 
+      http:
+        paths:
+        #Both the host and path must match the content of an incoming request before
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fastapi-web
+                port:
+                  number: 5000
+          - path: /pgamdin
+            pathType: Prefix
+            backend:
+              service:
+                name: pgadmin
+                port:
+                  number: 80
+
+                    

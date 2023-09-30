@@ -34,6 +34,11 @@ spec:
                 key: postgres-root-password
             # Volume mount specifications in postgre container
             # The volumeMounts section defines how the persistent storage from the PVC is mounted inside
+          - name: POSTGRES_HOST_AUTH_METHOD
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-configmap 
+                key: postgres-auth-method
           volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: postgres-persistent-volume

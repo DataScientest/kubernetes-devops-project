@@ -19,7 +19,7 @@ spec:
         image: tandiand/kubernetes-fastapi
         imagePullPolicy: "Always"
         ports: 
-        - containerPort: 5000
+        - containerPort: 5000 #port: is the abstracted Service port, which can be any port other pods use to access the Service)
           name: fastapi-svc
 ---
 apiVersion: v1
