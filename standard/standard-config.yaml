@@ -4,6 +4,7 @@ preferences: {}
 
 contexts:
 - context:
-  name: standard
+    cluster: default
     namespace: standard
     user: default
+  name: standard-yaml-context
