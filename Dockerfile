@@ -1,8 +1,7 @@
 FROM python:3.8.10
  
 WORKDIR /app
-# Copy the Python script and all folder into working directory
-COPY app.py /app
+#COPY app.py /app
 COPY requirements.txt /app
 COPY routes/ /app/routes
 COPY schemas/ /app/schemas
@@ -16,6 +15,8 @@ RUN python -m pip install pip==20.0.2
 RUN pip3 install --no-cache-dir -r requirements.txt
 #The --no-cache-dir option is used to prevent caching the package index on the container, reducing the image size
 
+# Copy the Python app into working directory
+COPY ./app.py /app/
 EXPOSE 5000
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
