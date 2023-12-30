@@ -1,4 +1,4 @@
-# This manifest contains fastapi app that deploys an FastAPI app
+# This manifest contains a FastAPI app that deploys a FastAPI app
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,33 +9,38 @@ spec:
   selector:
     matchLabels:
       app: fastapi
+      tier: frontend
   template:
     metadata:
       labels:
         app: fastapi
+        tier: frontend
     spec:
       containers:
-      - name: fastapi-app
-        image: tandiand/kubernetes-fastapi
+      - name: fastapi
+        image: tandiand/kubernetes-fastapi:0.0.1
         imagePullPolicy: "Always"
         ports: 
-        - containerPort: 5000 #port: is the abstracted Service port, which can be any port other pods use to access the Service)
+        - containerPort: 5000
+          hostPort: 80  # Explanation comment removed due to ambiguity
           name: fastapi-svc
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata: 
-  name: fastapi-service
+  name: fastapi
   labels:
     app: fastapi
+    tier: frontend
 spec:
   type: NodePort
   ports:
-    - protocol: TCP
-      port: 5000
-      targetPort: fastapi-svc
+    - name: fastapi-svc
+      protocol: TCP
+      port: 80
+      targetPort: 5000 
       nodePort: 31000
-
-
-
-        
+  selector:
+    app: fastapi
+    tier: frontend

@@ -5,15 +5,21 @@ kind: Deployment #why not use statefulset
 metadata:
   name: postgres
   namespace: standard
+  labels:
+   app: postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: postgres
+      tier: backend
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: postgres
+        tier: backend
     spec:
       containers:
         - name: postgres
@@ -21,6 +27,8 @@ spec:
           imagePullPolicy: "IfNotPresent"
           ports:
           - containerPort: 5432
+            protocol: TCP
+          resources: {}
           env:
           - name: POSTGRES_USER
             valueFrom:
@@ -38,14 +46,19 @@ spec:
             valueFrom:
               configMapKeyRef:
                 name: postgres-configmap 
-                key: postgres-auth-method
+                key: postgres_auth_method
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-configmap 
+                key: postgres_db
           volumeMounts:
           - mountPath: /var/lib/postgresql/data
-            name: postgres-persistent-volume
+            name: postgres-datas
       volumes:
-      - name: postgres-persistent-volume
+      - name: postgres-datas
         persistentVolumeClaim:
-          claimName: postgres-pv-claim
+          claimName: postgres-datas
 ---
 apiVersion: v1
 kind: Service
@@ -63,4 +76,3 @@ spec:
     protocol: TCP
     targetPort: 5432 #container port
 
-  

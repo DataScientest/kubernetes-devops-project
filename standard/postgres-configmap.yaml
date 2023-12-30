@@ -9,5 +9,7 @@ metadata:
 # name for the database, default user email for logging into the PostgreSQL instance
 data:
   postgres_db: storedb
-  pgadmin_default_email: admin@pgadmin.com
-  postgres-auth-method: trust
+  pgadmin_default_email: admin@admin.com
+  postgres_auth_method: trust
+
+
