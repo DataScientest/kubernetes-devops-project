@@ -1,0 +1,11 @@
+postgres:
+  config:
+    data:
+      - key: POSTGRES_DB
+        value: storedb
+      - key: POSTGRES_USER
+        value: admin
+  secret:
+    data:
+      - key: POSTGRES_PASSWORD
+        value: cGFzc3dvcmQ=

@@ -1,0 +1,37 @@
+# Default values for pgadmin.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+pgadmin:
+  name: pgadmin
+  namespace: helm
+  group: frontend
+  container:
+    image: dpage/pgadmin4:latest
+    port: 80
+    env:
+      - name: PGADMIN_DEFAULT_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: pgadmin-secret
+            key: PGADMIN_DEFAULT_PASSWORD
+      - name: PGADMIN_DEFAULT_EMAIL
+        valueFrom:
+          configMapKeyRef:
+            name: pgadmin-config
+            key: PGADMIN_DEFAULT_EMAIL
+  service:
+    type: ClusterIP
+    port: 80
+  # to store PGADMIN_DEFAULT_EMAIL
+  config:
+    name: pgadmin-config
+    data:
+      - key: key
+        value: value
+  secret: # PGADMIN_DEFAULT_PASSWORD
+    name: pgadmin-secret
+    type: Opaque
+    data:
+      - key: key # PGADMIN_DEFAULT_PASSWORD
+        value: value

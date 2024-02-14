@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.pgadmin.config.name }}
+  namespace: {{ .Values.pgadmin.config.namespace }}
+  labels:
+    group: {{ .Values.pgadmin.group }}
+data:  #for loop for env vars
+{{- range .Values.pgadmin.config.data }}
+  {{ .key }}: {{ .value }}
+{{- end}}

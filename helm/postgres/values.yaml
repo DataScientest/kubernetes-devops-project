@@ -1,0 +1,32 @@
+replicaCount: 1
+postgres:
+  name: postgres
+  namespace: helm
+  group: db
+  container:
+    image: postgres:12.16-alpine3.18 
+    port: 5432
+  service:
+    type: ClusterIP
+    port: 5432
+  volume:
+    name: postgres-datas-helm
+    kind: PersistentVolumeClaim
+    mountPath: /var/lib/postgresql/data
+    pvc:
+      name: postgres-persistent-volume-claim
+      accessMode: ReadWriteOnce
+      storage: 4Gi
+  config:
+    name: postgres-config
+    data:
+       - key: key
+         value: value 
+  secret:
+    name: postgres-secret
+    type: Opaque      # - containerPort: 80
+      #   hostPort: 8080
+      #   protocol: TCPaque
+    data:
+       - key: key
+         value: value  
