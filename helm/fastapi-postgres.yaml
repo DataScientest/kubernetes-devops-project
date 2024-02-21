@@ -1,4 +1,5 @@
 postgres:
+  group: backend
   config:
     data:
       - key: POSTGRES_DB
@@ -8,4 +9,4 @@ postgres:
   secret:
     data:
       - key: POSTGRES_PASSWORD
-        value: cGFzc3dvcmQ=
+        value: password

@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: pgadmin-fastapi
       protocol: TCP
-      name: http
+      name: pgadmin-fastapi
   selector:
     {{- include "pgadmin-runix.selectorLabels" . | nindent 4 }}
