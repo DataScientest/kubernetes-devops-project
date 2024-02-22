@@ -1,16 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fastapi.fullname" . }}
+  name: {{ .Values.name }}
   labels:
-    {{- include "fastapi.labels" . | nindent 4 }}
+    app: {{ .Values.podLabels }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "fastapi.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.podLabels }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,27 +16,21 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "fastapi.labels" . | nindent 8 }}
-	      {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        app: {{ .Values.podLabels }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "fastapi.serviceAccountName" . }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }} 
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.image.repository }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Values.name }}
+          image: {{ .Values.image.repository }} 
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
+            - containerPort: {{ .Values.service.ports.targetPort }}
+              name: http
               protocol: TCP
           livenessProbe:
             httpGet:

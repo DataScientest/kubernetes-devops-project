@@ -1,7 +1,7 @@
 # Default values for fastapi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
+name: fastapi
 replicaCount: 1
 image:
   repository: tandiand/kubernetes-fastapi:0.0.1
@@ -55,37 +55,27 @@ service:
 ingress:
   enabled: true
   className: "traefik"
-  annotations: {traefik.ingress.kubernetes.io/router.entrypoints: "/"
-}
+  annotations: 
+    traefik.ingress.kubernetes.io/router.entrypoints: "/"
   spec:
-  rules:
-  - host: helm.fastapi.local
-    http:
-      paths: 
-        - path: /
-          pathType: Prefix
-          backend:
-            service: 
-              name: name
-              port: 
-                number: 80
-  hosts:  
-    - host: helm.fastapi.local
-      paths: 
-        - path: /fastapi/
-          pathType: Prefix  # Specify the pathType
-          backend:
-            service: 
-              name: fastapi
-              port:
-                number: 80
-        - path: /pgadmin/
-          pathType: Prefix  # Specify the pathType
-          backend:
-            service: 
-              name: pgadmin
-              port: 
-                number: 8080
+    rules:
+      hosts:  
+        - host: helm.fastapi.local
+          paths: 
+            - path: /fastapi/
+              pathType: Prefix  # Specify the pathType
+              backend:
+                service: 
+                  name: fastapi
+                  port:
+                    number: 80
+            - path: /pgadmin/
+              pathType: Prefix  # Specify the pathType
+              backend:
+                service: 
+                  name: pgadmin
+                  port: 
+                    number: 8080
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -108,7 +98,7 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 50
 
 # Additional volumes on the output Deployment definition.
 volumes: []
