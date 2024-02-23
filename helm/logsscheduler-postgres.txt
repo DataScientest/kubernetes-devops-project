@@ -1,0 +1,46 @@
+Name:             postgres-76d85c74b-fggct
+Namespace:        helm
+Priority:         0
+Service Account:  default
+Node:             <none>
+Labels:           app=postgres
+                  group=backend
+                  pod-template-hash=76d85c74b
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Controlled By:    ReplicaSet/postgres-76d85c74b
+Containers:
+  postgres:
+    Image:      postgres:12.16-alpine3.18
+    Port:       5432/TCP
+    Host Port:  0/TCP
+    Environment Variables from:
+      postgres-secret  Secret  Optional: false
+    Environment:       <none>
+    Mounts:
+      /var/lib/postgresql/data from postgres-datas-helm (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-77cmt (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False 
+Volumes:
+  postgres-datas-helm:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  postgres-datas-helm
+    ReadOnly:   false
+  kube-api-access-77cmt:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age    From               Message
+  ----     ------            ----   ----               -------
+  Warning  FailedScheduling  3m36s  default-scheduler  0/1 nodes are available: persistentvolumeclaim "postgres-datas-helm" not found. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling..

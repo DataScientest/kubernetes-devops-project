@@ -2,7 +2,8 @@ replicaCount: 1
 postgres:
   name: postgres
   namespace: helm
-  group: db
+  labels:
+   app: postgres 
   container:
     image: postgres:12.16-alpine3.18 
     port: 5432
@@ -14,7 +15,7 @@ postgres:
     kind: PersistentVolumeClaim
     mountPath: /var/lib/postgresql/data
     pvc:
-      name: postgres-persistent-volume-claim
+      name: postgres-datas-helm
       accessMode: ReadWriteOnce
       storage: 4Gi
   config:
