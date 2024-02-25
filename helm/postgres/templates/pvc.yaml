@@ -2,6 +2,7 @@ apiVersion: v1
 kind: {{ .Values.postgres.volume.kind }}
 metadata:
   name: {{ .Values.postgres.volume.pvc.name }}
+  namespace: {{ .Values.postgres.namespace }}
 spec:
   accessModes:
     - {{ .Values.postgres.volume.pvc.accessMode }}

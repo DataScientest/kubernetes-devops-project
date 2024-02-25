@@ -6,6 +6,9 @@ replicaCount: 1
 image:
   repository: tandiand/kubernetes-fastapi:0.0.1
   pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: "300m"      
   # containerPort: 5000
   # name: fastapi-svc
   # protocol: TCP
@@ -55,31 +58,35 @@ service:
 ingress:
   enabled: true
   className: "traefik"
+  name: "fastapi-ingress"
   annotations: 
-    traefik.ingress.kubernetes.io/router.entrypoints: "/"
+  #traefik.ingress.kubernetes.io/router.entrypoints: "/"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   spec:
+    ingressClassName: traefik     
     rules:
-      hosts:  
-        - host: helm.fastapi.local
+      - host: microservice-k8s.cours-devops.cloudns.ph
+        http:
           paths: 
-            - path: /fastapi/
+            - path: /fastapi
               pathType: Prefix  # Specify the pathType
               backend:
                 service: 
                   name: fastapi
                   port:
-                    number: 80
-            - path: /pgadmin/
+                    number: 80 
+            - path: /pgadmin
               pathType: Prefix  # Specify the pathType
               backend:
                 service: 
-                  name: pgadmin
+                  name: pgadmin-pgadmin4
                   port: 
                     number: 8080
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls: 
+    # secret name will be create
+    - secretName: fastapi-secret
+      hosts:
+        - microservice-k8s.cours-devops.cloudns.ph
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -95,10 +102,10 @@ resources: {}
 
 autoscaling:
   enabled: true
-  minReplicas: 1
-  maxReplicas: 3
+  minReplicas: 3
+  maxReplicas: 6
   targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 50
+  targetMemoryUtilizationPercentage: 70
 
 # Additional volumes on the output Deployment definition.
 volumes: []

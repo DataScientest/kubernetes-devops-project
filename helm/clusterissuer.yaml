@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod # nom de la ressource
+spec:
+  acme:
+    # L'URL du serveur ACME
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Adresse e-mail utilisée pour l'enregistrement ACME
+    email: dn.tandian@gmail.com
+    # Nom d'un secret utilisé pour stocker la clé privée du compte ACME
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # Activer le fournisseur de challenge HTTP-01
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
+
