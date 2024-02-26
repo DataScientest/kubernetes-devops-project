@@ -31,7 +31,7 @@ serviceAccount:
   name: "fastapi"
 
 podAnnotations: {}
-podLabels: frontend
+podLabels: fastapi
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -52,6 +52,7 @@ service:
     port: 80 
     protocol: TCP
     targetPort: 5000
+  selector: fastapi
     # The targetPort field is the port number on which the backend Pods associated with the Service are listening     
       
 
