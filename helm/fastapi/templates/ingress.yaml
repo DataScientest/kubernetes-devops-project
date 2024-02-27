@@ -3,32 +3,35 @@ kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}
   namespace: {{ .Values.namespace }}
-  labels:
-    {{- include "fastapi.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+{{- with .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.className }}      
+  ingressClassName: {{ .Values.ingress.className }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.hosts }}
+      secretName: {{ .Values.ingress.tls.secretName }}
   rules:
     {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ . | quote }}
       http:
         paths:
-        {{- range .paths }}
+        {{- range .Values.ingress.spec.rules }}
           - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
-              service: 
+              service:
                 name: {{ .backend.service.name }}
-                port: 
+                port:
                   number: {{ .backend.service.port.number }}
         {{- end }}
     {{- end }}
   defaultBackend:
-      service:
-        name: fastapi
-        port:
-          number: 80 
+    service:
+      name: fastapi
+      port:
+        number: 80
+
 
