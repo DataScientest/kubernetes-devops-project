@@ -1,0 +1,14 @@
+pgadmin:
+  secret:
+    data:
+      - key: PGADMIN_DEFAULT_PASSWORD
+        value: pgadmin
+  config:
+    data:
+      - key: PGADMIN_DEFAULT_EMAIL
+        value: dn.tandian@gmail.com
+  # env:
+  #   - key: PGADMIN_DEFAULT_EMAIL
+  #     value: dn.tandian@gmail.com
+  #   - key: PGADMIN_DEFAULT_PASSWORD
+  #     value: cGdkYW1pbgo= #pgadmin

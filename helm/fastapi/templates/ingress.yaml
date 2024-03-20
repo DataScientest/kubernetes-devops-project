@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.name }}
+  namespace: {{ .Values.ingress.namespace }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.tls }}
+  tls:
+  {{- range .Values.ingress.tls }}        
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}      
+      secretName: {{ .secretName }}
+  {{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ .name }}
+                port:
+                  number: {{ .number }}
+        {{- end }}
+    {{- end }}
+   {{- end }}
+  defaultBackend:
+    service:
+      name: fastapi
+      port:
+        number: 80
+
+

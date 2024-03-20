@@ -1,0 +1,78 @@
+#The deployment file contains configuration of the PostgreSQL deployment
+#provides specifications for the containers and volumes:
+apiVersion: apps/v1
+kind: Deployment #why not use statefulset
+metadata:
+  name: postgres
+  namespace: standard
+  labels:
+   app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+        tier: backend
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:12.16-alpine3.18
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          resources: {}
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret #name from postgre-secret file
+                key: postgres-root-username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret #name from postgre-secret file
+                key: postgres-root-password
+            # Volume mount specifications in postgre container
+            # The volumeMounts section defines how the persistent storage from the PVC is mounted inside
+          - name: POSTGRES_HOST_AUTH_METHOD
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-configmap 
+                key: postgres_auth_method
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-configmap 
+                key: postgres_db
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-datas
+      volumes:
+      - name: postgres-datas
+        persistentVolumeClaim:
+          claimName: postgres-datas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+    tier: backend
+  ports:
+  - port: 5432 #allow to expose service port
+    protocol: TCP
+    targetPort: 5432 #container port
+

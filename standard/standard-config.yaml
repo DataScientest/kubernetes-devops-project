@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Config
+preferences: {}
+
+contexts:
+- context:
+    cluster: default
+    namespace: standard
+    user: default
+  name: standard-yaml-context

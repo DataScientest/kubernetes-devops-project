@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-configmap
+  namespace: standard
+  labels:
+    app: postgres
+# this section contains variables required  
+# name for the database, default user email for logging into the PostgreSQL instance
+data:
+  postgres_db: storedb
+  pgadmin_default_email: admin@admin.com
+  postgres_auth_method: trust
+
+

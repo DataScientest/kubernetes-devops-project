@@ -1,0 +1,20 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pv-volume
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: ""
+  # It is only one StorageClass in the cluster
+  # When a PVC does not specify a storageClassName, the default StorageClass is used.
+  capacity:
+    storage: 10Gi
+  claimRef:
+    name: postgres-datas
+    namespace: standard
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/datas_postgres"

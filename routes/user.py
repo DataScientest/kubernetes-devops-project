@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from config.db import conn
 from models.user import users
 from schemas.user import User, UserCount
@@ -14,7 +14,9 @@ f = Fernet(key)
 
 @user.get("/")
 def root():
-    return {"message": "Congratulations ! It works ! You should try to take a look at the pgadmin panel on port 8080"}
+    return {"message": "Congratulations ! It works ! FastAPI into docker container!!! You should try to take a look at the pgadmin panel on port 8080"}
+    if status_code == 404:
+        raise HTTPException(status_code=404, detail="Your are on bad route Nothing to display")
     
 @user.get(
     "/users",
